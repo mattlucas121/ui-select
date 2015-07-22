@@ -458,9 +458,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   ];
 
   $scope.breadCrumbs = [{"id": 'ALL', "title": "All"}];
-
   $scope.group = {};
-
   $scope.groups = getGroupsFor('ALL');
 
   function getGroupsFor(id) {
@@ -580,7 +578,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     {"id":65, "title": "Nested Example", "parent": false}
   ];
 
-  angular.forEach(selected, function (item, index) {
+  _.each(selected, function (item, index) {
     if (selected[index] === selected[selected.length - 1]) {
       return false;
     }

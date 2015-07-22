@@ -257,3 +257,45 @@ body > .ui-select-bootstrap.open {
 .ui-select-container[theme="bootstrap"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
 }
+
+/* Bread crumb */
+.crumbs {
+    padding: 5px 10px;
+    border-bottom: 1px solid #333;
+}
+
+.crumb {
+    color: blue;
+    cursor: pointer;
+    position: relative;
+    padding-right: 16px;
+}
+
+.crumb:hover {
+    color: red;
+}
+
+.crumb:after {
+    content: ' > ';
+    margin-left: 5px;
+    position: absolute;
+    color: #e3e3e3;
+}
+
+.crumb:last-child {
+    cursor: default;
+}
+
+.crumb:last-child:hover {
+    color: blue;
+}
+
+.crumb:last-child:after {
+    content: '';
+}
+
+.show-child-group {
+    float: right;
+    padding: 3px 8px !important;
+    font-size: 8px !important;
+}
