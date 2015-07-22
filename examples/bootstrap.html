@@ -20,6 +20,8 @@
 
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-sanitize.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min.js"></script>
+
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
 
   <!-- ui-select files -->
@@ -104,6 +106,22 @@
             <ui-select-choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
+            </ui-select-choices>
+          </ui-select>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Nested Select</label>
+        <div class="col-sm-6">
+
+          <ui-select ng-model="group.selected" theme="bootstrap">
+            <ui-select-match placeholder="Select or search a group in the list...">{{$select.selected.title}}</ui-select-match>
+            <ui-select-choices breadcrumbs="{{breadCrumbs}}" repeat="item in groups | filter: $select.search">
+              <span ng-bind-html="item.title | highlight: $select.search"></span>
+              <span ng-if="item.size" ng-bind-html="'('+item.size+' locations)'"></span>
+              <button ng-show="item.parent" class="btn btn-default show-child-group" ng-click="loadNewData(item, $event)">></button>
             </ui-select-choices>
           </ui-select>
 

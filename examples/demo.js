@@ -73,15 +73,15 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.someGroupFn = function (item){
 
     if (item.name[0] >= 'A' && item.name[0] <= 'M')
-        return 'From A - M';
+      return 'From A - M';
 
     if (item.name[0] >= 'N' && item.name[0] <= 'Z')
-        return 'From N - Z';
+      return 'From N - Z';
 
   };
 
   $scope.firstLetterGroupFn = function (item){
-      return item.name[0];
+    return item.name[0];
   };
 
   $scope.reverseOrderFilterFn = function(groups) {
@@ -92,18 +92,18 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.peopleAsync = [];
 
   $timeout(function(){
-   $scope.peopleAsync = [
-        { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
-        { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
-        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
-        { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
-        { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
-        { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
-        { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
-        { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
-        { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
-        { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
-      ];
+    $scope.peopleAsync = [
+      { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
+      { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+      { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+      { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+      { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+      { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+      { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+      { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+      { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+      { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
+    ];
   },3000);
 
   $scope.counter = 0;
@@ -114,17 +114,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   $scope.removed = function (item, model) {
     $scope.lastRemoved = {
-        item: item,
-        model: model
+      item: item,
+      model: model
     };
   };
 
   $scope.tagTransform = function (newTag) {
     var item = {
-        name: newTag,
-        email: newTag.toLowerCase()+'@email.com',
-        age: 'unknown',
-        country: 'unknown'
+      name: newTag,
+      email: newTag.toLowerCase()+'@email.com',
+      age: 'unknown',
+      country: 'unknown'
     };
 
     return item;
@@ -199,8 +199,8 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
       'http://maps.googleapis.com/maps/api/geocode/json',
       {params: params}
     ).then(function(response) {
-      $scope.addresses = response.data.results;
-    });
+        $scope.addresses = response.data.results;
+      });
   };
 
   $scope.addPerson = function(item, model){
@@ -456,4 +456,136 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     {name: 'Zambia', code: 'ZM'},
     {name: 'Zimbabwe', code: 'ZW'}
   ];
+
+  $scope.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+
+  $scope.group = {};
+
+  $scope.groups = getGroupsFor('ALL');
+
+  function getGroupsFor(id) {
+    var service = {
+      'ALL': [
+        {"id": 'CAISO', "title": "CAISO", "size": "8", "parent": true},
+        {"id": 'ERCOT', "title": "ERCOT", "size": "304", "parent": true},
+        {"id": 'PJM', "title": "PJM", "size": "5", "parent": true},
+        {"id": 'MISO', "title": "MISO", "size": "1031", "parent": true},
+        {"id": 'NYISO', "title": "NYISO", "size": "495", "parent": true},
+        {"id": 'Airport', "title": "Airport Code", "size": "15,095", "parent": true},
+        {"id": 'EXAMPLE', "title": "Nested Example", "parent": true}
+      ],
+      'PJM': [
+        {"id":21, "title": "AECO", "parent": false},
+        {"id":22, "title": "AEP GEN HUB", "parent": false},
+        {"id":23, "title": "AK STEEL", "parent": false},
+        {"id":24, "title": "ATSI", "parent": false},
+        {"id":25, "title": "COMED", "parent": false},
+        {"id":26, "title": "DAY", "parent": false},
+        {"id":27, "title": "DEOK", "parent": false},
+        {"id":28, "title": "DOM", "parent": false},
+        {"id":29, "title": "DPL", "parent": false},
+        {"id":30, "title": "DUQ", "parent": false},
+        {"id":31, "title": "EKPC", "parent": false},
+        {"id":32, "title": "FE OHIO", "parent": false},
+        {"id":33, "title": "JCPL", "parent": false},
+        {"id":34, "title": "METED", "parent": false},
+        {"id":35, "title": "PECO", "parent": false},
+        {"id":36, "title": "PENELEC", "parent": false},
+        {"id":37, "title": "PPL", "parent": false},
+        {"id":38, "title": "PSEG", "parent": false},
+        {"id":39, "title": "RECO", "parent": false}
+      ],
+      'CAISO': [
+        {"id":'CAISO.TH_NP15_GEN-APND', "title": "TH_NP15_GEN-APND", "parent": false},
+        {"id":'CAISO.TH_ZP26_GEN-APND', "title": "TH_ZP26_GEN-APND", "parent": false},
+        {"id":'CAISO.INLANDG2_7_N001', "title": "INLANDG2_7_N001", "parent": false},
+        {"id":'CAISO.TH_SP15_GEN-APND', "title": "TH_SP15_GEN-APND", "parent": false},
+        {"id":'CAISO.VALLEYSC_5_B1', "title": "VALLEYSC_5_B1", "parent": false},
+        {"id":'CAISO.INLANDG1_7_N001', "title": "INLANDG1_7_N001", "parent": false},
+        {"id":'CAISO.INLANDG2_7_N002', "title": "INLANDG2_7_N002", "parent": false},
+        {"id":'CAISO.CLAP_INLDEM-APND', "title": "CLAP_INLDEM-APND", "parent": false}],
+      'MISO': [
+        {"id":22, "title": "ARKANSAS.HUB", "parent": false},
+        {"id":42, "title": "BREC.COLE3", "parent": false},
+        {"id":43, "title": "INDIANA.HUB", "parent": false},
+        {"id":44, "title": "ILLINOIS.HUB", "parent": false}
+      ],
+      'NYISO': [
+        {"id":51, "title": "CAPITL", "parent": false},
+        {"id":52, "title": "CENTRL", "parent": false},
+        {"id":53, "title": "DUNWOD", "parent": false},
+        {"id":54, "title": "GENESE", "parent": false},
+        {"id":55, "title": "H Q", "parent": false},
+        {"id":56, "title": "HUD VL", "parent": false},
+        {"id":57, "title": "MILLWD", "parent": false},
+        {"id":58, "title": "N.Y.C.", "parent": false}
+      ],
+      'Airport': [
+        {"id":61, "title": "PIT", "parent": false},
+        {"id":62, "title": "JFK", "parent": false},
+        {"id":63, "title": "LGA", "parent": false},
+        {"id":64, "title": "IAD", "parent": false},
+        {"id":65, "title": "ATL", "parent": false}
+      ],
+      'ERCOT': [
+        {"id":71, "title": "North", "parent": false},
+        {"id":72, "title": "North Central", "parent": false},
+        {"id":73, "title": "East", "parent": false},
+        {"id":74, "title": "Far West", "parent": false},
+        {"id":75, "title": "West", "parent": false},
+        {"id":76, "title": "East", "parent": false},
+        {"id":77, "title": "South", "parent": false},
+        {"id":78, "title": "South Central", "parent": false},
+        {"id":79, "title": "Coast", "parent": false}
+      ],
+      'EXAMPLE': [
+        {"id":80, "title": "Example 1", "parent": false},
+        {"id":'NESTED_EXAMPLE', "title": "Example 2", "parent": true}
+      ],
+      'NESTED_EXAMPLE': [
+        {"id":81, "title":'Nested Example 1', "parent": false},
+        {"id":82, "title":'Nested Example 2', "parent": false},
+        {"id":83, "title":'Nested Example 3', "parent": false},
+        {"id":84, "title":'Nested Example 4', "parent": false},
+        {"id":85, "title":'Nested Example 5', "parent": false},
+        {"id":86, "title":'Nested Example 6', "parent": false}
+      ]
+    };
+
+    return service[id];
+  }
+
+  $scope.loadNewData = function(group, e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    $scope.breadCrumbs.push(group);
+    $scope.groups = getGroupsFor(group.id);
+  };
+
+  $scope.breadCrumbBackTo = function (crumb, e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    var index = _.findIndex($scope.breadCrumbs, {id: crumb.id});
+    $scope.breadCrumbs.splice(index + 1, $scope.breadCrumbs.length);
+    $scope.groups = getGroupsFor(_.last($scope.breadCrumbs).id);
+  };
+
+  var selected = [
+    {"id": 'EXAMPLE', "title": "Nested Example", "parent": true},
+    {"id":'NESTED_EXAMPLE', "title": "Example 2", "parent": true},
+    {"id":65, "title": "Nested Example", "parent": false}
+  ];
+
+  angular.forEach(selected, function (item, index) {
+    if (selected[index] === selected[selected.length - 1]) {
+      return false;
+    }
+
+    $scope.loadNewData(item);
+  });
+
 });
