@@ -2,7 +2,7 @@
     role="listbox"
     ng-show="$select.items.length > 0">
     <li class="crumbs" ng-show="breadcrumbs.length > 1">
-        <span class="crumb" ng-click="breadCrumbBackTo(crumb, $event)" ng-repeat="crumb in breadcrumbs">
+        <span class="crumb" ng-click="breadCrumbBackTo(crumb, $event, queryIndex)" ng-repeat="crumb in breadcrumbs">
             {{ crumb.title }}
         </span>
     </li>
