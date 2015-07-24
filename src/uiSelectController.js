@@ -183,6 +183,7 @@ uis.controller('uiSelectCtrl',
           }
           if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
             $scope.calculateDropdownPos();
+
           }
         };
 
