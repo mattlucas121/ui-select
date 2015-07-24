@@ -147,7 +147,8 @@ uis.controller('uiSelectCtrl',
 
         ctrl.refreshItems = function (data) {
           if (ctrl.isTreeNavigation) {
-            data = data.all;
+            data = data.ALL;
+            //console.log(data);
           }
 
           data = data || ctrl.parserResult.source($scope);
@@ -210,20 +211,21 @@ uis.controller('uiSelectCtrl',
               //TODO Should add a test
               if (!angular.isArray(items)) {
                 ctrl.isTreeNavigation = true;
+                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
                 ctrl.treeStructure = items;
 
-                if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
-                  angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                    ctrl.loadNewData(item);
-                  });
-
-                } else {
-                  ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+                if (ctrl.ngModel.$modelValue) {
+                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+                    ctrl.breadCrumbs = [];
+                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                      ctrl.loadNewData(item);
+                    });
+                  }
                 }
-              } else {
-                ctrl.refreshItems(items);
               }
 
+
+              ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
             }
           }

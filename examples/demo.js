@@ -558,28 +558,29 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
 
   $scope.person = {
-    "selected": {
-      "id": 86,
-      "title": "Nested Example 6",
-      "parent": false,
-      "breadCrumbs": [
-        {
-          "id": "ALL",
-          "title": "All"
-        },
-        {
-          "id": "EXAMPLE",
-          "title": "Nested Example",
-          "parent": true
-        },
-        {
-          "id": "NESTED_EXAMPLE",
-          "title": "Example 2",
-          "parent": true
-        }
-      ]
-    }
+    //"selected": {
+    //  "id": 86,
+    //  "title": "Nested Example 6",
+    //  "parent": false,
+    //  "breadCrumbs": [
+    //    {
+    //      "id": "ALL",
+    //      "title": "All"
+    //    },
+    //    {
+    //      "id": "EXAMPLE",
+    //      "title": "Nested Example",
+    //      "parent": true
+    //    },
+    //    {
+    //      "id": "NESTED_EXAMPLE",
+    //      "title": "Example 2",
+    //      "parent": true
+    //    }
+    //  ]
+    //}
   };
+
   //$scope.breadCrumbs = [{"id": 'ALL', "title": "All"}];
   //$scope.group = {};
   //$scope.groups = getGroupsFor('ALL');

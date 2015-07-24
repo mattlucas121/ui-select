@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-24T15:46:10.152Z
+ * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
  * License: MIT
  */
 
@@ -386,7 +386,8 @@ uis.controller('uiSelectCtrl',
 
         ctrl.refreshItems = function (data) {
           if (ctrl.isTreeNavigation) {
-            data = data.all;
+            data = data.ALL;
+            //console.log(data);
           }
 
           data = data || ctrl.parserResult.source($scope);
@@ -403,11 +404,13 @@ uis.controller('uiSelectCtrl',
         };
 
 
+        // Get specified object from tree structure
         function getGroupsFor(id) {
           return ctrl.treeStructure[id];
         }
 
 
+        // Navigate back up the tree structure
         ctrl.breadCrumbBackTo = function (crumb, e) {
           if (e) { e.stopPropagation(); }
 
@@ -421,6 +424,8 @@ uis.controller('uiSelectCtrl',
           ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
         };
 
+
+        // Load the next level of the tree.
         ctrl.loadNewData = function(group, e) {
           if (e) {
             e.stopPropagation();
@@ -445,20 +450,21 @@ uis.controller('uiSelectCtrl',
               //TODO Should add a test
               if (!angular.isArray(items)) {
                 ctrl.isTreeNavigation = true;
+                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
                 ctrl.treeStructure = items;
 
-                if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
-                  angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                    ctrl.loadNewData(item);
-                  });
-
-                } else {
-                  ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+                if (ctrl.ngModel.$modelValue) {
+                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+                    ctrl.breadCrumbs = [];
+                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                      ctrl.loadNewData(item);
+                    });
+                  }
                 }
-              } else {
-                ctrl.refreshItems(items);
               }
 
+
+              ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
             }
           }
