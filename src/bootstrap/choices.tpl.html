@@ -1,8 +1,8 @@
 <ul class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu"
     role="listbox"
     ng-show="$select.items.length > 0">
-    <li class="crumbs" ng-show="breadcrumbs.length > 1">
-        <span class="crumb" ng-click="breadCrumbBackTo(crumb, $event, queryIndex)" ng-repeat="crumb in breadcrumbs">
+    <li class="crumbs" ng-show="$select.breadCrumbs.length > 1">
+        <span class="crumb" ng-click="$select.breadCrumbBackTo(crumb, $event)" ng-repeat="crumb in $select.breadCrumbs">
             {{ crumb.title }}
         </span>
     </li>

@@ -18,12 +18,12 @@ var plumber = require('gulp-plumber');//To prevent pipe breaking caused by error
 var config = {
   pkg : JSON.parse(fs.readFileSync('./package.json')),
   banner:
-      '/*!\n' +
-      ' * <%= pkg.name %>\n' +
-      ' * <%= pkg.homepage %>\n' +
-      ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
-      ' * License: <%= pkg.license %>\n' +
-      ' */\n\n\n'
+  '/*!\n' +
+  ' * <%= pkg.name %>\n' +
+  ' * <%= pkg.homepage %>\n' +
+  ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
+  ' * License: <%= pkg.license %>\n' +
+  ' */\n\n\n'
 };
 
 gulp.task('default', ['build','test']);
@@ -43,10 +43,10 @@ gulp.task('scripts', ['clean'], function() {
   var buildTemplates = function () {
     return gulp.src('src/**/*.html')
       .pipe(minifyHtml({
-             empty: true,
-             spare: true,
-             quotes: true
-            }))
+        empty: true,
+        spare: true,
+        quotes: true
+      }))
       .pipe(templateCache({module: 'ui.select'}));
   };
 

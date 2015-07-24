@@ -19,16 +19,10 @@ uis.directive('uiSelectChoices',
 
       return function link(scope, element, attrs, $select, transcludeFn) {
 
-        // Watching breadcrumbs DOM.
-        attrs.$observe('breadcrumbs', function(val) {
-          scope.breadcrumbs = scope.$eval(val);
-        });
-
-        scope.goBack = scope.$eval(attrs.onClick);
-
         // var repeat = RepeatParser.parse(attrs.repeat);
         var groupByExp = attrs.groupBy;
         var groupFilterExp = attrs.groupFilter;
+
 
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
@@ -63,6 +57,7 @@ uis.directive('uiSelectChoices',
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
           $select.refresh(attrs.refresh);
         });
+
 
         attrs.$observe('refreshDelay', function() {
           // $eval() is needed otherwise we get a string instead of a number
