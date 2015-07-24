@@ -116,15 +116,18 @@
         <label class="col-sm-3 control-label">Nested Select</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="group.selected" theme="bootstrap">
+          <ui-select ng-model="person.selected" theme="bootstrap">
             <ui-select-match placeholder="Select or search a group in the list...">{{$select.selected.title}}</ui-select-match>
             <ui-select-choices breadcrumbs="{{breadCrumbs}}" repeat="item in groups | filter: $select.search">
               <span ng-bind-html="item.title | highlight: $select.search"></span>
               <span ng-if="item.size" ng-bind-html="'('+item.size+' locations)'"></span>
-              <button ng-show="item.parent" class="btn btn-default show-child-group" ng-click="loadNewData(item, $event)">></button>
+              <button ng-show="item.parent" class="btn btn-default show-child-group" ng-click="$select.loadNewData(item, $event)">></button>
             </ui-select-choices>
           </ui-select>
 
+          <pre ng-bind="person | json">
+
+          </pre>
         </div>
       </div>
 
