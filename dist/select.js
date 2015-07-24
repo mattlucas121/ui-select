@@ -1,7 +1,11 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
+<<<<<<< HEAD
  * Version: 0.13.2 - 2015-10-28T17:34:28.209Z
+=======
+ * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
+>>>>>>> Fixed empty selection objects not populating list of options.
  * License: MIT
  */
 
@@ -387,6 +391,7 @@ uis.controller('uiSelectCtrl',
         ctrl.isGrouped = !!groupByExp;
         ctrl.itemProperty = ctrl.parserResult.itemName;
 
+<<<<<<< HEAD
         //If collection is an Object, convert it to Array
 
         var originalSource = ctrl.parserResult.source;
@@ -409,6 +414,13 @@ uis.controller('uiSelectCtrl',
             if (newVal !== oldVal) createArrayFromObject();
           }, true);
         }
+=======
+        ctrl.refreshItems = function (data) {
+          if (ctrl.isTreeNavigation) {
+            data = data.ALL;
+            //console.log(data);
+          }
+>>>>>>> Fixed empty selection objects not populating list of options.
 
         ctrl.refreshItems = function (data){
           data = data || ctrl.parserResult.source($scope);
@@ -422,8 +434,39 @@ uis.controller('uiSelectCtrl',
               ctrl.setItemsFn(filteredItems);
             }
           }
+<<<<<<< HEAD
           if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
             $scope.calculateDropdownPos();
+=======
+        };
+
+
+        // Get specified object from tree structure
+        function getGroupsFor(id) {
+          return ctrl.treeStructure[id];
+        }
+
+
+        // Navigate back up the tree structure
+        ctrl.breadCrumbBackTo = function (crumb, e) {
+          if (e) { e.stopPropagation(); }
+
+          var index = null;
+          angular.forEach(ctrl.breadCrumbs, function (item, crumbIndex) {
+            if (item.id === crumb.id) {
+              index = crumbIndex;
+            }
+          });
+          ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
+          ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
+        };
+
+
+        // Load the next level of the tree.
+        ctrl.loadNewData = function(group, e) {
+          if (e) {
+            e.stopPropagation();
+>>>>>>> Fixed empty selection objects not populating list of options.
           }
         };
 
@@ -440,6 +483,25 @@ uis.controller('uiSelectCtrl',
             } else {
               //Remove already selected items (ex: while searching)
               //TODO Should add a test
+<<<<<<< HEAD
+=======
+              if (!angular.isArray(items)) {
+                ctrl.isTreeNavigation = true;
+                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+                ctrl.treeStructure = items;
+
+                if (ctrl.ngModel.$modelValue) {
+                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+                    ctrl.breadCrumbs = [];
+                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                      ctrl.loadNewData(item);
+                    });
+                  }
+                }
+              }
+
+
+>>>>>>> Fixed empty selection objects not populating list of options.
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
             }
