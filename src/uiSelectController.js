@@ -164,11 +164,13 @@ uis.controller('uiSelectCtrl',
         };
 
 
+        // Get specified object from tree structure
         function getGroupsFor(id) {
           return ctrl.treeStructure[id];
         }
 
 
+        // Navigate back up the tree structure
         ctrl.breadCrumbBackTo = function (crumb, e) {
           if (e) { e.stopPropagation(); }
 
@@ -182,6 +184,8 @@ uis.controller('uiSelectCtrl',
           ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
         };
 
+
+        // Load the next level of the tree.
         ctrl.loadNewData = function(group, e) {
           if (e) {
             e.stopPropagation();
