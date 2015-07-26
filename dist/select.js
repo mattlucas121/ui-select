@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-26T15:23:49.929Z
+ * Version: 0.12.0 - 2015-07-26T15:44:41.612Z
  * License: MIT
  */
 
@@ -432,6 +432,10 @@ uis.controller('uiSelectCtrl',
           ctrl.items = ctrl.treeStructure[group.id];
           ctrl.search = '';
         };
+
+        if (!angular.isArray(ctrl.parserResult.source)) {
+          ctrl.isTreeNavigation = true;
+        }
 
         // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
         $scope.$watchCollection(ctrl.parserResult.source, function(items) {
@@ -1602,8 +1606,10 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       scope.$on('uis:select', function (event, item) {
         if ($select.isTreeNavigation) {
-          item.breadCrumbs = angular.copy($select.breadCrumbs);
+          item.breadCrumbs = $select.breadCrumbs;
         }
+
+        console.log('selected..');
 
         $select.selected = item;
       });

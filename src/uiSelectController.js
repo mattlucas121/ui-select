@@ -194,6 +194,10 @@ uis.controller('uiSelectCtrl',
           ctrl.search = '';
         };
 
+        if (!angular.isArray(ctrl.parserResult.source)) {
+          ctrl.isTreeNavigation = true;
+        }
+
         // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
         $scope.$watchCollection(ctrl.parserResult.source, function(items) {
           if (items === undefined || items === null) {
