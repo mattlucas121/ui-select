@@ -24,7 +24,7 @@ uis.controller('uiSelectCtrl',
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
       ctrl.treeStructure = {};
-      ctrl.breadCrumbs = [];
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
 
       ctrl.isTreeNavigation = false;
       ctrl.open = false;
@@ -188,12 +188,10 @@ uis.controller('uiSelectCtrl',
 
         // Load the next level of the tree.
         ctrl.loadNewData = function(group, e) {
-          if (e) {
-            e.stopPropagation();
-          }
-
+          e.stopPropagation();
           ctrl.breadCrumbs.push(group);
           ctrl.items = ctrl.treeStructure[group.id];
+          ctrl.search = '';
         };
 
         // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259

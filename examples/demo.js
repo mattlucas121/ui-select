@@ -39,6 +39,22 @@ app.filter('propsFilter', function() {
   };
 });
 
+app.filter('treeFilter', function($filter) {
+
+  // In the return function, we must pass in a single parameter which will be the data we will work on.
+  // We have the ability to support multiple other parameters that can be passed into the filter optionally
+  return function(input, breadCrumbs, query) {
+    var output = [];
+
+    if (angular.isUndefined(breadCrumbs) || breadCrumbs.length === 0) {
+      return $filter('filter')(input.ALL, query);
+    }
+
+    return $filter('filter')(input[breadCrumbs[breadCrumbs.length - 1].id], query);
+  }
+
+});
+
 app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.disabled = undefined;
   $scope.searchEnabled = undefined;
