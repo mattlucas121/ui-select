@@ -73,15 +73,15 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.someGroupFn = function (item){
 
     if (item.name[0] >= 'A' && item.name[0] <= 'M')
-      return 'From A - M';
+        return 'From A - M';
 
     if (item.name[0] >= 'N' && item.name[0] <= 'Z')
-      return 'From N - Z';
+        return 'From N - Z';
 
   };
 
   $scope.firstLetterGroupFn = function (item){
-    return item.name[0];
+      return item.name[0];
   };
 
   $scope.reverseOrderFilterFn = function(groups) {
@@ -92,18 +92,18 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.peopleAsync = [];
 
   $timeout(function(){
-    $scope.peopleAsync = [
-      { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
-      { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
-      { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
-      { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
-      { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
-      { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
-      { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
-      { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
-      { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
-      { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
-    ];
+   $scope.peopleAsync = [
+        { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
+        { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+        { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+        { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+        { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+        { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+        { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+        { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+        { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
+      ];
   },3000);
 
   $scope.counter = 0;
@@ -114,17 +114,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   $scope.removed = function (item, model) {
     $scope.lastRemoved = {
-      item: item,
-      model: model
+        item: item,
+        model: model
     };
   };
 
   $scope.tagTransform = function (newTag) {
     var item = {
-      name: newTag,
-      email: newTag.toLowerCase()+'@email.com',
-      age: 'unknown',
-      country: 'unknown'
+        name: newTag,
+        email: newTag.toLowerCase()+'@email.com',
+        age: 'unknown',
+        country: 'unknown'
     };
 
     return item;
@@ -199,8 +199,8 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
       'http://maps.googleapis.com/maps/api/geocode/json',
       {params: params}
     ).then(function(response) {
-        $scope.addresses = response.data.results;
-      });
+      $scope.addresses = response.data.results;
+    });
   };
 
   $scope.addPerson = function(item, model){
@@ -457,6 +457,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     {name: 'Zimbabwe', code: 'ZW'}
   ];
 
+
   $scope.groups = {
     'ALL': [
       {"id": 'CAISO', "title": "CAISO", "size": "8", "parent": true},
@@ -576,6 +577,8 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   };
 
 
+
+
   $scope.person = {
     "selected": {
       "id": 86,
@@ -599,47 +602,5 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
       ]
     }
   };
-
-  //$scope.breadCrumbs = [{"id": 'ALL', "title": "All"}];
-  //$scope.group = {};
-  //$scope.groups = getGroupsFor('ALL');
-  //
-  //
-  //function getGroupsFor(id) {
-  //  return $scope.locations[id];
-  //}
-  //
-  //$scope.loadNewData = function(group, e) {
-  //  if (e) {
-  //    e.stopPropagation();
-  //  }
-  //
-  //  $scope.breadCrumbs.push(group);
-  //  $scope.groups = getGroupsFor(group.id);
-  //};
-  //
-  //$scope.breadCrumbBackTo = function (crumb, e) {
-  //  if (e) {
-  //    e.stopPropagation();
-  //  }
-  //
-  //  var index = _.findIndex($scope.breadCrumbs, {id: crumb.id});
-  //  $scope.breadCrumbs.splice(index + 1, $scope.breadCrumbs.length);
-  //  $scope.groups = getGroupsFor(_.last($scope.breadCrumbs).id);
-  //};
-
-  //var selected = [
-  //  {"id": 'EXAMPLE', "title": "Nested Example", "parent": true},
-  //  {"id":'NESTED_EXAMPLE', "title": "Example 2", "parent": true},
-  //  {"id":65, "title": "Nested Example", "parent": false}
-  //];
-  //
-  //_.each(selected, function (item, index) {
-  //  if (selected[index] === selected[selected.length - 1]) {
-  //    return false;
-  //  }
-  //
-  //  $scope.loadNewData(item);
-  //});
 
 });

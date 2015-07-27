@@ -23,7 +23,6 @@ uis.directive('uiSelectChoices',
         var groupByExp = attrs.groupBy;
         var groupFilterExp = attrs.groupFilter;
 
-
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
         $select.disableChoiceExpression = attrs.uiDisableChoice;
@@ -57,7 +56,6 @@ uis.directive('uiSelectChoices',
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
           $select.refresh(attrs.refresh);
         });
-
 
         attrs.$observe('refreshDelay', function() {
           // $eval() is needed otherwise we get a string instead of a number

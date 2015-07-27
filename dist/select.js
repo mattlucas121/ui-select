@@ -1,19 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- * Version: 0.13.2 - 2015-10-28T17:34:28.209Z
-=======
- * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
->>>>>>> Fixed empty selection objects not populating list of options.
-=======
- * Version: 0.12.0 - 2015-07-27T18:34:36.047Z
->>>>>>> Fixed restoration of location.
-=======
- * Version: 0.12.0 - 2015-07-27T19:05:08.363Z
->>>>>>> Fixed breadCrumbs not being copied properly, restoring of locaiton.
+ * Version: 0.13.2 - 2015-10-28T17:37:16.216Z
  * License: MIT
  */
 
@@ -159,6 +147,40 @@ var uis = angular.module('ui.select', [])
   };
 })
 
+
+  /**
+   * Used to filter data when in tree type strcuture
+   *
+   * Example:
+   *
+   * Option 1
+   *   Option 1A
+   *   Option 1B
+   *     Option 1AA
+   *     Option 1AB
+   * Option 2
+   * Option 3
+   *   Option 3A
+   *   Option 3B
+   *   Option 3C
+   *
+   */
+.filter('treeFilter', function($filter) {
+
+  // In the return function, we must pass in a single parameter which will be the data we will work on.
+  // We have the ability to support multiple other parameters that can be passed into the filter optionally
+  return function(input, breadCrumbs, query) {
+
+    if (angular.isUndefined(breadCrumbs) || breadCrumbs.length === 0) {
+      return $filter('filter')(input.ALL, query);
+    }
+
+    return $filter('filter')(input[breadCrumbs[breadCrumbs.length - 1].id], query);
+  }
+
+})
+
+
 /**
  * A read-only equivalent of jQuery's offset function: http://api.jquery.com/offset/
  *
@@ -205,7 +227,6 @@ uis.directive('uiSelectChoices',
         var groupByExp = attrs.groupBy;
         var groupFilterExp = attrs.groupFilter;
 
-
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
         $select.disableChoiceExpression = attrs.uiDisableChoice;
@@ -239,7 +260,6 @@ uis.directive('uiSelectChoices',
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
           $select.refresh(attrs.refresh);
         });
-
 
         attrs.$observe('refreshDelay', function() {
           // $eval() is needed otherwise we get a string instead of a number
@@ -276,11 +296,6 @@ uis.controller('uiSelectCtrl',
 
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
-<<<<<<< HEAD
-=======
-      ctrl.treeStructure = {};
-      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
->>>>>>> Fixed breadCrumbs not being copied properly, restoring of locaiton.
 
       ctrl.open = false;
       ctrl.focus = false;
@@ -404,7 +419,6 @@ uis.controller('uiSelectCtrl',
         ctrl.isGrouped = !!groupByExp;
         ctrl.itemProperty = ctrl.parserResult.itemName;
 
-<<<<<<< HEAD
         //If collection is an Object, convert it to Array
 
         var originalSource = ctrl.parserResult.source;
@@ -427,13 +441,6 @@ uis.controller('uiSelectCtrl',
             if (newVal !== oldVal) createArrayFromObject();
           }, true);
         }
-=======
-        ctrl.refreshItems = function (data) {
-          if (ctrl.isTreeNavigation) {
-            data = data.ALL;
-            //console.log(data);
-          }
->>>>>>> Fixed empty selection objects not populating list of options.
 
         ctrl.refreshItems = function (data){
           data = data || ctrl.parserResult.source($scope);
@@ -447,44 +454,8 @@ uis.controller('uiSelectCtrl',
               ctrl.setItemsFn(filteredItems);
             }
           }
-<<<<<<< HEAD
           if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
             $scope.calculateDropdownPos();
-=======
-        };
-
-
-        // Get specified object from tree structure
-        function getGroupsFor(id) {
-          return ctrl.treeStructure[id];
-        }
-
-
-        // Navigate back up the tree structure
-        ctrl.breadCrumbBackTo = function (crumb, e) {
-          if (e) { e.stopPropagation(); }
-
-          var index = null;
-          angular.forEach(ctrl.breadCrumbs, function (item, crumbIndex) {
-            if (item.id === crumb.id) {
-              index = crumbIndex;
-            }
-          });
-
-          ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
-          ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
-        };
-
-
-        // Load the next level of the tree.
-        ctrl.loadNewData = function(group, e) {
-          if (e) {
-            e.stopPropagation();
-<<<<<<< HEAD
->>>>>>> Fixed empty selection objects not populating list of options.
-=======
-            e.preventDefault();
->>>>>>> Fixed restoration of location.
           }
         };
 
@@ -501,29 +472,6 @@ uis.controller('uiSelectCtrl',
             } else {
               //Remove already selected items (ex: while searching)
               //TODO Should add a test
-<<<<<<< HEAD
-=======
-              if (!angular.isArray(items)) {
-                ctrl.isTreeNavigation = true;
-                ctrl.treeStructure = items;
-
-                if (ctrl.ngModel.$modelValue) {
-                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
-                    ctrl.breadCrumbs = [];
-                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                      $timeout(function () {
-                        ctrl.loadNewData(item);
-                      });
-                    });
-                  }
-                }
-              }
-
-<<<<<<< HEAD
-
->>>>>>> Fixed empty selection objects not populating list of options.
-=======
->>>>>>> Fixed restoration of location.
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
             }
@@ -1710,13 +1658,14 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       ngModel.$render = function() {
         $select.selected = ngModel.$viewValue;
       };
+      //
+      //scope.$on('uis:select', function (event, item) {
+      //  $select.selected = item;
+      //});
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = angular.copy(item);
-
-        if ($select.isTreeNavigation) {
-          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
-        }
+        $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
@@ -1783,7 +1732,6 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
         scope.$digest();
 
       });
-
 
     }
   };

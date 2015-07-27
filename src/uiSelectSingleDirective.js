@@ -48,13 +48,14 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       ngModel.$render = function() {
         $select.selected = ngModel.$viewValue;
       };
+      //
+      //scope.$on('uis:select', function (event, item) {
+      //  $select.selected = item;
+      //});
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = angular.copy(item);
-
-        if ($select.isTreeNavigation) {
-          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
-        }
+        $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
@@ -121,7 +122,6 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
         scope.$digest();
 
       });
-
 
     }
   };
