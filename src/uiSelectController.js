@@ -23,14 +23,12 @@ uis.controller('uiSelectCtrl',
 
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
-      ctrl.treeStructure = {};
-      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
 
-      ctrl.isTreeNavigation = false;
       ctrl.open = false;
       ctrl.focus = false;
       ctrl.disabled = false;
       ctrl.selected = undefined;
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
 
       ctrl.focusser = undefined; //Reference to input element used to handle focus events
       ctrl.resetSearchInput = true;
@@ -74,6 +72,24 @@ uis.controller('uiSelectCtrl',
         return result;
       }
 
+
+      // Restores menu if object has existing breadcrumbs.
+      $timeout(function () {
+        if (ctrl.ngModel) {
+          if (ctrl.ngModel.$modelValue) {
+            if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+              ctrl.breadCrumbs = [];
+              angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                $timeout(function () {
+                  ctrl.loadNewData(item);
+                });
+              });
+            }
+          }
+        }
+      });
+
+
       // When the user clicks on ui-select, displays the dropdown list
       ctrl.activate = function(initSearchValue, avoidReset) {
         if (!ctrl.disabled  && !ctrl.open) {
@@ -106,7 +122,6 @@ uis.controller('uiSelectCtrl',
       };
 
       ctrl.parseRepeatAttr = function(repeatAttr, groupByExp, groupFilterExp) {
-
         function updateGroups(items) {
           var groupFn = $scope.$eval(groupByExp);
           ctrl.groups = [];
@@ -145,12 +160,7 @@ uis.controller('uiSelectCtrl',
         ctrl.isGrouped = !!groupByExp;
         ctrl.itemProperty = ctrl.parserResult.itemName;
 
-        ctrl.refreshItems = function (data) {
-          if (ctrl.isTreeNavigation) {
-            data = data.ALL;
-            //console.log(data);
-          }
-
+        ctrl.refreshItems = function (data){
           data = data || ctrl.parserResult.source($scope);
           var selectedItems = ctrl.selected;
           //TODO should implement for single mode removeSelected
@@ -164,40 +174,6 @@ uis.controller('uiSelectCtrl',
           }
         };
 
-
-        // Get specified object from tree structure
-        function getGroupsFor(id) {
-          return ctrl.treeStructure[id];
-        }
-
-
-        // Navigate back up the tree structure
-        ctrl.breadCrumbBackTo = function (crumb, e) {
-          if (e) { e.stopPropagation(); }
-
-          var index = null;
-          angular.forEach(ctrl.breadCrumbs, function (item, crumbIndex) {
-            if (item.id === crumb.id) {
-              index = crumbIndex;
-            }
-          });
-
-          ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
-          ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
-        };
-
-
-        // Load the next level of the tree.
-        ctrl.loadNewData = function(group, e) {
-          if (e) {
-            e.stopPropagation();
-            e.preventDefault();
-          }
-
-          ctrl.breadCrumbs.push(group);
-          ctrl.items = ctrl.treeStructure[group.id];
-        };
-
         // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
         $scope.$watchCollection(ctrl.parserResult.source, function(items) {
           if (items === undefined || items === null) {
@@ -206,26 +182,11 @@ uis.controller('uiSelectCtrl',
             // i.e $scope.addresses = [] is missing
             ctrl.items = [];
           } else {
-            if (!angular.isArray(items) && !angular.isObject(items)) {
-              throw uiSelectMinErr('items', "Expected an array or object but got '{0}'.", items);
+            if (!angular.isArray(items)) {
+              throw uiSelectMinErr('items', "Expected an array but got '{0}'.", items);
             } else {
               //Remove already selected items (ex: while searching)
               //TODO Should add a test
-              if (!angular.isArray(items)) {
-                ctrl.isTreeNavigation = true;
-                ctrl.treeStructure = items;
-
-                if (ctrl.ngModel.$modelValue) {
-                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
-                    ctrl.breadCrumbs = [];
-                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                      $timeout(function () {
-                        ctrl.loadNewData(item);
-                      });
-                    });
-                  }
-                }
-              }
 
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
@@ -297,11 +258,8 @@ uis.controller('uiSelectCtrl',
       };
 
 
-
       // When the user selects an item with ENTER or clicks the dropdown
       ctrl.select = function(item, skipFocusser, $event) {
-
-
         if (item === undefined || !item._uiSelectChoiceDisabled) {
 
           if ( ! ctrl.items && ! ctrl.search ) return;
@@ -351,8 +309,7 @@ uis.controller('uiSelectCtrl',
             var locals = {};
             locals[ctrl.parserResult.itemName] = item;
 
-
-            $timeout(function() {
+            $timeout(function(){
               ctrl.onSelectCallback($scope, {
                 $item: item,
                 $model: ctrl.parserResult.modelMapper($scope, locals)
@@ -402,6 +359,41 @@ uis.controller('uiSelectCtrl',
           ctrl.activate();
         }
       };
+
+      // Navigate back up the tree structure
+      ctrl.breadCrumbBackTo = function (crumb, e) {
+        if (e) { e.stopPropagation(); }
+
+        var index = null;
+        angular.forEach(ctrl.breadCrumbs, function (item, crumbIndex) {
+          if (item.id === crumb.id) {
+            index = crumbIndex;
+          }
+        });
+
+        ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
+      };
+
+
+
+      // Load the next level of the tree.
+      ctrl.loadNewData = function(group, e) {
+        if (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+
+        ctrl.breadCrumbs.push(group);
+        //ctrl.items = ctrl.treeStructure[group.id];
+      };
+
+
+
+
+
+
+
+
 
       ctrl.isLocked = function(itemScope, itemIndex) {
         var isLocked, item = ctrl.selected[itemIndex];
@@ -516,7 +508,6 @@ uis.controller('uiSelectCtrl',
 
         });
 
-        // done
         if(KEY.isVerticalMovement(key) && ctrl.items.length > 0){
           _ensureHighlightVisible();
         }
@@ -525,6 +516,7 @@ uis.controller('uiSelectCtrl',
           e.preventDefault();
           e.stopPropagation();
         }
+
       });
 
       // If tagging try to split by tokens and add items
@@ -580,5 +572,6 @@ uis.controller('uiSelectCtrl',
       $scope.$on('$destroy', function() {
         ctrl.searchInput.off('keyup keydown tagged blur paste');
       });
+
 
     }]);
