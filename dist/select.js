@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-27T21:16:14.613Z
+ * Version: 0.12.0 - 2015-07-27T21:31:52.858Z
  * License: MIT
  */
 
@@ -164,7 +164,7 @@ var uis = angular.module('ui.select', [])
    *   Option 3C
    *
    */
-.filter('treeFilter', function($filter) {
+.filter('treeFilter', ['$filter', function($filter) {
 
   // In the return function, we must pass in a single parameter which will be the data we will work on.
   // We have the ability to support multiple other parameters that can be passed into the filter optionally
@@ -177,7 +177,7 @@ var uis = angular.module('ui.select', [])
     return $filter('filter')(input[breadCrumbs[breadCrumbs.length - 1].id], query);
   }
 
-})
+}])
 
 
 /**
