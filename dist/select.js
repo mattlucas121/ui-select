@@ -2,10 +2,14 @@
  * ui-select
  * http://github.com/angular-ui/ui-select
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Version: 0.13.2 - 2015-10-28T17:34:28.209Z
 =======
  * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
 >>>>>>> Fixed empty selection objects not populating list of options.
+=======
+ * Version: 0.12.0 - 2015-07-27T18:34:36.047Z
+>>>>>>> Fixed restoration of location.
  * License: MIT
  */
 
@@ -466,7 +470,11 @@ uis.controller('uiSelectCtrl',
         ctrl.loadNewData = function(group, e) {
           if (e) {
             e.stopPropagation();
+<<<<<<< HEAD
 >>>>>>> Fixed empty selection objects not populating list of options.
+=======
+            e.preventDefault();
+>>>>>>> Fixed restoration of location.
           }
         };
 
@@ -494,14 +502,19 @@ uis.controller('uiSelectCtrl',
                   if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
                     ctrl.breadCrumbs = [];
                     angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                      ctrl.loadNewData(item);
+                      $timeout(function () {
+                        ctrl.loadNewData(item);
+                      });
                     });
                   }
                 }
               }
 
+<<<<<<< HEAD
 
 >>>>>>> Fixed empty selection objects not populating list of options.
+=======
+>>>>>>> Fixed restoration of location.
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
             }
