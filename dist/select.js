@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-27T21:31:52.858Z
+ * Version: 0.12.0 - 2015-07-27T22:51:28.040Z
  * License: MIT
  */
 
@@ -1635,7 +1635,9 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = angular.copy(item);
-        $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        if (typeof(item) !== 'string') {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
