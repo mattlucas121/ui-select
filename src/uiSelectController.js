@@ -24,7 +24,7 @@ uis.controller('uiSelectCtrl',
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
       ctrl.treeStructure = {};
-      ctrl.breadCrumbs = [];
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
 
       ctrl.isTreeNavigation = false;
       ctrl.open = false;
@@ -181,6 +181,7 @@ uis.controller('uiSelectCtrl',
               index = crumbIndex;
             }
           });
+
           ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
           ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
         };
@@ -212,7 +213,6 @@ uis.controller('uiSelectCtrl',
               //TODO Should add a test
               if (!angular.isArray(items)) {
                 ctrl.isTreeNavigation = true;
-                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
                 ctrl.treeStructure = items;
 
                 if (ctrl.ngModel.$modelValue) {

@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-27T18:34:36.047Z
+ * Version: 0.12.0 - 2015-07-27T19:05:08.363Z
  * License: MIT
  */
 
@@ -263,7 +263,7 @@ uis.controller('uiSelectCtrl',
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
       ctrl.treeStructure = {};
-      ctrl.breadCrumbs = [];
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
 
       ctrl.isTreeNavigation = false;
       ctrl.open = false;
@@ -420,6 +420,7 @@ uis.controller('uiSelectCtrl',
               index = crumbIndex;
             }
           });
+
           ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
           ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
         };
@@ -451,7 +452,6 @@ uis.controller('uiSelectCtrl',
               //TODO Should add a test
               if (!angular.isArray(items)) {
                 ctrl.isTreeNavigation = true;
-                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
                 ctrl.treeStructure = items;
 
                 if (ctrl.ngModel.$modelValue) {
@@ -1605,11 +1605,11 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       };
 
       scope.$on('uis:select', function (event, item) {
-        if ($select.isTreeNavigation) {
-          item.breadCrumbs = angular.copy($select.breadCrumbs);
-        }
+        $select.selected = angular.copy(item);
 
-        $select.selected = item;
+        if ($select.isTreeNavigation) {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
