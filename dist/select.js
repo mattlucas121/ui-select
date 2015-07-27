@@ -3,6 +3,7 @@
  * http://github.com/angular-ui/ui-select
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Version: 0.13.2 - 2015-10-28T17:34:28.209Z
 =======
  * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
@@ -10,6 +11,9 @@
 =======
  * Version: 0.12.0 - 2015-07-27T18:34:36.047Z
 >>>>>>> Fixed restoration of location.
+=======
+ * Version: 0.12.0 - 2015-07-27T19:05:08.363Z
+>>>>>>> Fixed breadCrumbs not being copied properly, restoring of locaiton.
  * License: MIT
  */
 
@@ -272,6 +276,11 @@ uis.controller('uiSelectCtrl',
 
       ctrl.activeIndex = 0; //Dropdown of choices
       ctrl.items = []; //All available choices
+<<<<<<< HEAD
+=======
+      ctrl.treeStructure = {};
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+>>>>>>> Fixed breadCrumbs not being copied properly, restoring of locaiton.
 
       ctrl.open = false;
       ctrl.focus = false;
@@ -461,6 +470,7 @@ uis.controller('uiSelectCtrl',
               index = crumbIndex;
             }
           });
+
           ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
           ctrl.items = getGroupsFor(ctrl.breadCrumbs[ctrl.breadCrumbs.length - 1].id);
         };
@@ -495,7 +505,6 @@ uis.controller('uiSelectCtrl',
 =======
               if (!angular.isArray(items)) {
                 ctrl.isTreeNavigation = true;
-                ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
                 ctrl.treeStructure = items;
 
                 if (ctrl.ngModel.$modelValue) {
@@ -1703,11 +1712,11 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       };
 
       scope.$on('uis:select', function (event, item) {
-        if ($select.isTreeNavigation) {
-          item.breadCrumbs = angular.copy($select.breadCrumbs);
-        }
+        $select.selected = angular.copy(item);
 
-        $select.selected = item;
+        if ($select.isTreeNavigation) {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {

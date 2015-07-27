@@ -50,11 +50,11 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       };
 
       scope.$on('uis:select', function (event, item) {
-        if ($select.isTreeNavigation) {
-          item.breadCrumbs = angular.copy($select.breadCrumbs);
-        }
+        $select.selected = angular.copy(item);
 
-        $select.selected = item;
+        if ($select.isTreeNavigation) {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
