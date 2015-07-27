@@ -55,7 +55,9 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = angular.copy(item);
-        $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        if (typeof(item) !== 'string') {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {

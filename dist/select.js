@@ -3,6 +3,7 @@
  * http://github.com/angular-ui/ui-select
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Version: 0.13.2 - 2015-10-28T17:37:16.216Z
 =======
  * Version: 0.12.0 - 2015-07-27T21:16:14.613Z
@@ -10,6 +11,9 @@
 =======
  * Version: 0.12.0 - 2015-07-27T21:31:52.858Z
 >>>>>>> Added array annotation to satisify strict direct injection. (redo)
+=======
+ * Version: 0.12.0 - 2015-07-27T22:51:28.040Z
+>>>>>>> Added catch so that properties are not assigned to Strings.
  * License: MIT
  */
 
@@ -1673,7 +1677,9 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = angular.copy(item);
-        $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        if (typeof(item) !== 'string') {
+          $select.selected.breadCrumbs = angular.copy($select.breadCrumbs);
+        }
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
