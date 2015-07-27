@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-07-24T18:13:18.118Z
+ * Version: 0.12.0 - 2015-07-27T18:34:36.047Z
  * License: MIT
  */
 
@@ -429,6 +429,7 @@ uis.controller('uiSelectCtrl',
         ctrl.loadNewData = function(group, e) {
           if (e) {
             e.stopPropagation();
+            e.preventDefault();
           }
 
           ctrl.breadCrumbs.push(group);
@@ -457,12 +458,13 @@ uis.controller('uiSelectCtrl',
                   if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
                     ctrl.breadCrumbs = [];
                     angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                      ctrl.loadNewData(item);
+                      $timeout(function () {
+                        ctrl.loadNewData(item);
+                      });
                     });
                   }
                 }
               }
-
 
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters

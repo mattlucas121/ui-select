@@ -190,6 +190,7 @@ uis.controller('uiSelectCtrl',
         ctrl.loadNewData = function(group, e) {
           if (e) {
             e.stopPropagation();
+            e.preventDefault();
           }
 
           ctrl.breadCrumbs.push(group);
@@ -218,12 +219,13 @@ uis.controller('uiSelectCtrl',
                   if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
                     ctrl.breadCrumbs = [];
                     angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                      ctrl.loadNewData(item);
+                      $timeout(function () {
+                        ctrl.loadNewData(item);
+                      });
                     });
                   }
                 }
               }
-
 
               ctrl.refreshItems(items);
               ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
