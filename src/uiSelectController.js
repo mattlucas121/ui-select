@@ -28,6 +28,7 @@ uis.controller('uiSelectCtrl',
       ctrl.focus = false;
       ctrl.disabled = false;
       ctrl.selected = undefined;
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}]; // Breadcrumbs setup
 
       ctrl.dropdownPosition = 'auto';
 
@@ -132,6 +133,23 @@ uis.controller('uiSelectCtrl',
           ctrl.items = [];
           ctrl.groups.forEach(function(group) {
             ctrl.items = ctrl.items.concat(group.items);
+
+                  // Restores menu if object has existing breadcrumbs.
+                    $timeout(function () {
+                      if (ctrl.ngModel) {
+                        if (ctrl.ngModel.$modelValue) {
+                          if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+                            ctrl.breadCrumbs = [];
+                            angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                              $timeout(function () {
+                                ctrl.loadNewData(item);
+                              });
+                            });
+                          }
+                        }
+                      }
+                    });
+
           });
         }
 
@@ -376,6 +394,31 @@ uis.controller('uiSelectCtrl',
         }
 
         return isLocked;
+      };
+
+      // Navigate back up the tree structure
+      ctrl.breadCrumbBackTo = function (crumb, e) {
+        if (e) { e.stopPropagation(); }
+
+        var index = null;
+        angular.forEach(ctrl.breadCrumbs, function (item, crumbIndex) {
+          if (item.id === crumb.id) {
+            index = crumbIndex;
+          }
+        });
+
+        ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
+      };
+
+      // Load the next level of the tree.
+      ctrl.loadNewData = function(group, e) {
+        if (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+
+        ctrl.breadCrumbs.push(group);
+        //ctrl.items = ctrl.treeStructure[group.id];
       };
 
       var sizeWatch = null;
