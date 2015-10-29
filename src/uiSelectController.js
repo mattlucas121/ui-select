@@ -5,8 +5,8 @@
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 uis.controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', '$filter', 'uisRepeatParser', 'uiSelectMinErr', 'uiSelectConfig',
-    function($scope, $element, $timeout, $filter, RepeatParser, uiSelectMinErr, uiSelectConfig) {
+  ['$scope', '$element', '$timeout', '$filter', 'uisRepeatParser', 'uiSelectMinErr', 'uiSelectConfig', '$parse',
+    function($scope, $element, $timeout, $filter, RepeatParser, uiSelectMinErr, uiSelectConfig, $parse) {
 
       var ctrl = this;
 
@@ -28,7 +28,9 @@ uis.controller('uiSelectCtrl',
       ctrl.focus = false;
       ctrl.disabled = false;
       ctrl.selected = undefined;
-      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}];
+      ctrl.breadCrumbs = [{"id": 'ALL', "title": "All"}]; // Breadcrumbs setup
+
+      ctrl.dropdownPosition = 'auto';
 
       ctrl.focusser = undefined; //Reference to input element used to handle focus events
       ctrl.resetSearchInput = true;
@@ -72,24 +74,6 @@ uis.controller('uiSelectCtrl',
         return result;
       }
 
-
-      // Restores menu if object has existing breadcrumbs.
-      $timeout(function () {
-        if (ctrl.ngModel) {
-          if (ctrl.ngModel.$modelValue) {
-            if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
-              ctrl.breadCrumbs = [];
-              angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
-                $timeout(function () {
-                  ctrl.loadNewData(item);
-                });
-              });
-            }
-          }
-        }
-      });
-
-
       // When the user clicks on ui-select, displays the dropdown list
       ctrl.activate = function(initSearchValue, avoidReset) {
         if (!ctrl.disabled  && !ctrl.open) {
@@ -111,6 +95,9 @@ uis.controller('uiSelectCtrl',
           $timeout(function() {
             ctrl.search = initSearchValue || ctrl.search;
             ctrl.searchInput[0].focus();
+            if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
+              _ensureHighlightVisible();
+            }
           });
         }
       };
@@ -146,6 +133,23 @@ uis.controller('uiSelectCtrl',
           ctrl.items = [];
           ctrl.groups.forEach(function(group) {
             ctrl.items = ctrl.items.concat(group.items);
+
+            // Restores menu if object has existing breadcrumbs.
+            $timeout(function () {
+              if (ctrl.ngModel) {
+                if (ctrl.ngModel.$modelValue) {
+                  if (ctrl.ngModel.$modelValue.hasOwnProperty('breadCrumbs')) {
+                    ctrl.breadCrumbs = [];
+                    angular.forEach(ctrl.ngModel.$modelValue.breadCrumbs, function (item) {
+                      $timeout(function () {
+                        ctrl.loadNewData(item);
+                      });
+                    });
+                  }
+                }
+              }
+            });
+
           });
         }
 
@@ -160,17 +164,44 @@ uis.controller('uiSelectCtrl',
         ctrl.isGrouped = !!groupByExp;
         ctrl.itemProperty = ctrl.parserResult.itemName;
 
+        //If collection is an Object, convert it to Array
+
+        var originalSource = ctrl.parserResult.source;
+
+        //When an object is used as source, we better create an array and use it as 'source'
+        var createArrayFromObject = function(){
+          var origSrc = originalSource($scope);
+          $scope.$uisSource = Object.keys(origSrc).map(function(v){
+            var result = {};
+            result[ctrl.parserResult.keyName] = v;
+            result.value = origSrc[v];
+            return result;
+          });
+        };
+
+        if (ctrl.parserResult.keyName){ // Check for (key,value) syntax
+          createArrayFromObject();
+          ctrl.parserResult.source = $parse('$uisSource' + ctrl.parserResult.filters);
+          $scope.$watch(originalSource, function(newVal, oldVal){
+            if (newVal !== oldVal) createArrayFromObject();
+          }, true);
+        }
+
         ctrl.refreshItems = function (data){
           data = data || ctrl.parserResult.source($scope);
           var selectedItems = ctrl.selected;
           //TODO should implement for single mode removeSelected
-          if ((angular.isArray(selectedItems) && !selectedItems.length) || !ctrl.removeSelected) {
+
+          if (ctrl.isEmpty() || (angular.isArray(selectedItems) && !selectedItems.length) || !ctrl.removeSelected) {
             ctrl.setItemsFn(data);
           }else{
             if ( data !== undefined ) {
-              var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
+              var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
               ctrl.setItemsFn(filteredItems);
             }
+          }
+          if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
+            $scope.calculateDropdownPos();
           }
         };
 
@@ -216,10 +247,6 @@ uis.controller('uiSelectCtrl',
             $scope.$eval(refreshAttr);
           }, ctrl.refreshDelay);
         }
-      };
-
-      ctrl.setActiveItem = function(item) {
-        ctrl.activeIndex = ctrl.items.indexOf(item);
       };
 
       ctrl.isActive = function(itemScope) {
@@ -360,6 +387,17 @@ uis.controller('uiSelectCtrl',
         }
       };
 
+      ctrl.isLocked = function(itemScope, itemIndex) {
+        var isLocked, item = ctrl.selected[itemIndex];
+
+        if (item && !angular.isUndefined(ctrl.lockChoiceExpression)) {
+          isLocked = !!(itemScope.$eval(ctrl.lockChoiceExpression)); // force the boolean value
+          item._uiSelectChoiceLocked = isLocked; // store this for later reference
+        }
+
+        return isLocked;
+      };
+
       // Navigate back up the tree structure
       ctrl.breadCrumbBackTo = function (crumb, e) {
         if (e) { e.stopPropagation(); }
@@ -374,8 +412,6 @@ uis.controller('uiSelectCtrl',
         ctrl.breadCrumbs.splice(index + 1, ctrl.breadCrumbs.length);
       };
 
-
-
       // Load the next level of the tree.
       ctrl.loadNewData = function(group, e) {
         if (e) {
@@ -385,25 +421,6 @@ uis.controller('uiSelectCtrl',
 
         ctrl.breadCrumbs.push(group);
         //ctrl.items = ctrl.treeStructure[group.id];
-      };
-
-
-
-
-
-
-
-
-
-      ctrl.isLocked = function(itemScope, itemIndex) {
-        var isLocked, item = ctrl.selected[itemIndex];
-
-        if (item && !angular.isUndefined(ctrl.lockChoiceExpression)) {
-          isLocked = !!(itemScope.$eval(ctrl.lockChoiceExpression)); // force the boolean value
-          item._uiSelectChoiceLocked = isLocked; // store this for later reference
-        }
-
-        return isLocked;
       };
 
       var sizeWatch = null;
@@ -572,6 +589,5 @@ uis.controller('uiSelectCtrl',
       $scope.$on('$destroy', function() {
         ctrl.searchInput.off('keyup keydown tagged blur paste');
       });
-
 
     }]);
